@@ -6,33 +6,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
     <script src="./script.js" defer></script>
-    <title>Todo</title>
+    <title>To do Apps</title>
 </head>
 
 <body>
-    <section class="todo">
-        <h2>To-do list</h2>
-        <div class="input">
-            <input type="text" class="input-field" id="todoInput" placeholder="Add a new todo" />
-            <button class="btn">Add</button>
-        </div>
-        <ul class="scroll">
-            <li id="todoList"></li>
-        </ul>
-        <div>
-            <hr class="counter" />
-            <div class="counter-container">
-                <p><span id="todoCount">0</span> items total</p>
-                <button id="deleteButton">Delete All</button>
+    <div class="card">
+        <h2 class="title">To-do list Apps</h2>
+        <div class="profile">
+            <div class="profileName">
+                <h5>Name : Satria Sapta</h5>
+                <h5>Position : Developer</h5>
+                <h5 id="current-time"></h5>
             </div>
+
         </div>
-    </section>
-    <footer>
-        <div class="footer">
-            <p class="made-by">Made By</p>
-            <p class="author">Satria Sapta</p>
+        <div class="input">
+            <div class="inputTask">
+                <label for="todoInput" class="input-label">Enter Task</label>
+                <input type="text" class="input-field" id="todo-input" placeholder="Add a new todo" />
+            </div>
+            <div class="inputTask">
+                <label for="priority-level" class="input-label">Priority</label>
+                <select id="priority-level" class="input-field2">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div class="inputTask">
+                <label for="deadline" class="input-label">Deadline</label>
+                <input type="date" id="deadline" class="input-field" placeholder="Deadline" />
+            </div>
+            <button class="btn" id="add-todo">Add</button>
         </div>
-    </footer>
+
+
+        <div class="todo">
+            <table id="todo-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Task</th>
+                        <th>Priority</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody id="todo-list"></tbody>
+            </table>
+        </div>
+        <div class="taskDone">
+            <h3>Done</h3>
+            <ul id="done-list"></ul>
+        </div>
+        <div class="TaskOverdue">
+            <h3>Overdue</h3>
+            <ul id="overdue-list"></ul>
+        </div>
+        <button class="btn-remove" id="delete-all">Delete All</button>
+    </div>
 </body>
 
 </html>
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="profile">
+            <h1>Profile</h1>
+            <p>Name: John Doe</p>
+            <p>Position: Developer</p>
+        </div>
+        <div class="time">
+            <h1>Time</h1>
+            <p id="current-time"></p>
+        </div>
+        <div class="todo-input-section">
+            <textarea id="todo-input" placeholder="Enter your to-do..."></textarea>
+            <select id="priority-level">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+            <input type="date" id="deadline" placeholder="Deadline">
+            <button id="add-todo">Add To-Do</button>
+            <button id="delete-all">Delete All</button>
+        </div>
+
+        <h2>To-Do</h2>
+        <table id="todo-table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Task</th>
+                    <th>Priority</th>
+                    <th>Date</th>
+                    <th>Deadline</th>
+                </tr>
+            </thead>
+            <tbody id="todo-list"></tbody>
+        </table>
+
+        <h2>Done</h2>
+        <ul id="done-list"></ul>
+
+        <h2>Overdue</h2>
+        <ul id="overdue-list"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> -->

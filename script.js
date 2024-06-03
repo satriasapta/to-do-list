@@ -1,83 +1,87 @@
-let todo = JSON.parse(localStorage.getItem("todo")) || [];
-const todoInput = document.getElementById("todoInput");
-const todoList = document.getElementById("todoList");
-const todoCount = document.getElementById("todoCount");
-const addButton = document.querySelector(".btn");
-const deleteButton = document.getElementById("deleteButton");
-
-document.addEventListener("DOMContentLoaded", function () {
-    addButton.addEventListener("click", addTask);
-    todoInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            addTask();
-        }
-    });
-    deleteButton.addEventListener("click", deleteAllTasks);
-    displayTasks();
+document.addEventListener('DOMContentLoaded', () => {
+    updateTime();
+    setInterval(updateTime, 1000);
+    checkOverdueTasks();
+    setInterval(checkOverdueTasks, 6000); // Check mengecek telat atau tidaknya tugas setiap 1 menit
 });
 
-function addTask() {
-    const newTask = todoInput.value.trim();
-    if (newTask !== "") {
-        todo.push({ text: newTask, disabled: false });
-        saveToLocalStorage();
-        todoInput.value = "";
-        displayTasks();
+document.getElementById('add-todo').addEventListener('click', addTodo);
+document.getElementById('delete-all').addEventListener('click', deleteAllTodos);
+
+function updateTime() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-time').textContent = "Time     : " + now.toLocaleDateString(undefined, options);
+}
+
+function addTodo() {
+    const todoInput = document.getElementById('todo-input');
+    const priorityLevel = document.getElementById('priority-level').value;
+    const deadline = document.getElementById('deadline').value;
+    const todoText = todoInput.value.trim();
+
+    if (todoText === '' || deadline === '') return;
+
+    const todoItem = document.createElement('tr');
+    todoItem.innerHTML = `
+        <td><input type="checkbox" onclick="toggleDone(this)"></td>
+        <td>${todoText}</td>
+        <td>${priorityLevel}</td>
+        <td>${deadline}</td>
+    `;
+    document.getElementById('todo-list').appendChild(todoItem);
+
+    todoInput.value = '';
+    document.getElementById('deadline').value = '';
+}
+
+function toggleDone(checkbox) {
+    const todoItem = checkbox.parentElement.parentElement;
+    const doneList = document.getElementById('done-list');
+
+    if (checkbox.checked) {
+        const doneItem = document.createElement('li');
+        doneItem.innerHTML = `
+            <span>${todoItem.children[1].textContent}</span>
+            <button class="removeDone" onclick="removeDoneItem(this)">&#10006;</button>
+        `;
+        doneItem.classList.add('done');
+        doneList.appendChild(doneItem);
+        todoItem.remove();
     }
 }
 
-function displayTasks() {
-    todoList.innerHTML = "";
-    todo.forEach((item, index) => {
-        const p = document.createElement("p");
-        p.innerHTML = `
-      <div class="todo-container">
-        <input type="checkbox" class="todo-checkbox" id="input-${index}" ${item.disabled ? "checked" : ""
-            }>
-        <p id="todo-${index}" class="${item.disabled ? "disabled" : ""
-            }" onclick="editTask(${index})">${item.text}</p>
-      </div>
-    `;
-        p.querySelector(".todo-checkbox").addEventListener("change", () =>
-            toggleTask(index)
-        );
-        todoList.appendChild(p);
-    });
-    todoCount.textContent = todo.length;
+function removeDoneItem(button) {
+    button.parentElement.remove();
 }
 
-function editTask(index) {
-    const todoItem = document.getElementById(`todo-${index}`);
-    const existingText = todo[index].text;
-    const inputElement = document.createElement("input");
+function deleteAllTodos() {
+    document.getElementById('todo-list').innerHTML = '';
+    document.getElementById('done-list').innerHTML = '';
+    document.getElementById('overdue-list').innerHTML = '';
+}
 
-    inputElement.value = existingText;
-    todoItem.replaceWith(inputElement);
-    inputElement.focus();
+function checkOverdueTasks() {
+    const todoList = document.getElementById('todo-list').children;
+    const overdueList = document.getElementById('overdue-list');
+    const now = new Date();
 
-    inputElement.addEventListener("blur", function () {
-        const updatedText = inputElement.value.trim();
-        if (updatedText) {
-            todo[index].text = updatedText;
-            saveToLocalStorage();
+    for (let i = 0; i < todoList.length; i++) {
+        const deadline = new Date(todoList[i].children[3].textContent);
+        if (deadline < now) {
+            const overdueItem = document.createElement('li');
+            overdueItem.innerHTML = `
+                <span>${todoList[i].children[1].textContent}</span>
+                <button class="removeOverdue" onclick="removeOverdueItem(this)">&#10006;</button>
+            `;
+            overdueItem.classList.add('overdue');
+            overdueList.appendChild(overdueItem);
+            todoList[i].remove();
+            i--; // Adjust index after removal
         }
-        displayTasks();
-    });
+    }
 }
 
-function toggleTask(index) {
-    todo[index].disabled = !todo[index].disabled;
-    saveToLocalStorage();
-    displayTasks();
-}
-
-function deleteAllTasks() {
-    todo = [];
-    saveToLocalStorage();
-    displayTasks();
-}
-
-function saveToLocalStorage() {
-    localStorage.setItem("todo", JSON.stringify(todo));
+function removeOverdueItem(button) {
+    button.parentElement.remove();
 }
